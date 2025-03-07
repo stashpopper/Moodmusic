@@ -6,7 +6,7 @@ require('dotenv').config(); // Load environment variables
 
 const app = express();
 app.use(cors({
-  origin: ['http://localhost:5000', 'https://clever-marigold-6e1a21.netlify.app'],
+  origin: ['http://localhost:5000', 'https://clever-marigold-6e1a21.netlify.app', 'https://moodmusic-production.up.railway.app'],
   credentials: true
 }));
 app.use(express.json()); // Middleware to parse JSON

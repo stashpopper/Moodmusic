@@ -1,6 +1,6 @@
 const config = {
   API_URL: import.meta.env.PROD 
-    ? 'https://your-backend-url.com' // This will be updated once backend is deployed
+    ? 'https://moodmusic-production.up.railway.app'
     : 'http://localhost:5000'
 };
 
