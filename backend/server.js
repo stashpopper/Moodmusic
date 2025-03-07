@@ -21,6 +21,7 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
+app.options('*', cors()); // Allow all preflight OPTIONS requests
 app.use(express.json()); // Middleware to parse JSON
 
 // MongoDB Connection
