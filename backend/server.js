@@ -5,7 +5,10 @@ const axios = require('axios');
 const searchYoutube = require('youtube-search-without-api-key');
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: ['http://localhost:5000', 'https://clever-marigold-6e1a21.netlify.app'],
+  credentials: true
+}));
 app.use(express.json()); // Middleware to parse JSON
 
 require('dotenv').config(); // Load environment variables
