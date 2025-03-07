@@ -5,23 +5,18 @@ const axios = require('axios');
 require('dotenv').config(); // Load environment variables
 
 const app = express();
-const corsOptions = {
-  origin: function (origin, callback) {
-    const allowedOrigins = ['http://localhost:5000', 'https://clever-marigold-6e1a21.netlify.app'];
-    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  optionsSuccessStatus: 200
-};
+app.use(cors());
 
-app.use(cors(corsOptions));
-app.options('*', cors()); // Allow all preflight OPTIONS requests
+// Additional CORS headers
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+  next();
+});
 app.use(express.json()); // Middleware to parse JSON
 
 // MongoDB Connection
