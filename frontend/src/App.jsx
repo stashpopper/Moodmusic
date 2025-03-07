@@ -15,7 +15,7 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+  const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
   // Fetch history on component mount
   useEffect(() => {
@@ -25,7 +25,7 @@ function App() {
   const fetchHistory = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`${API_URL}/api/history`);
+      const response = await fetch(`${BASE_URL}/api/history`);
       const data = await response.json();
       if (data.success) {
         setHistory(data.history);
@@ -53,7 +53,7 @@ function App() {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch(`${API_URL}/api/recommendations`, {
+      const response = await fetch(`${BASE_URL}/api/recommendations`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -73,7 +73,7 @@ function App() {
         const savePromises = data.recommendations.map(async song => {
           const [songTitle, artist] = song.title.split(' - ').map(s => s.trim());
           try {
-            const response = await fetch(`${API_URL}/api/history`, {
+            const response = await fetch(`${BASE_URL}/api/history`, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json'
@@ -109,7 +109,7 @@ function App() {
 
   const handleFeedback = async (songId, feedback) => {
     try {
-      const response = await fetch(`${API_URL}/api/history/${songId}/feedback`, {
+      const response = await fetch(`${BASE_URL}/api/history/${songId}/feedback`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
@@ -132,7 +132,7 @@ function App() {
   const handleDeleteSong = async (songId) => {
     try {
       setLoading(true);
-      const response = await fetch(`${API_URL}/api/history/${songId}`, {
+      const response = await fetch(`${BASE_URL}/api/history/${songId}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json'
