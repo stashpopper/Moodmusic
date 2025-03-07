@@ -120,6 +120,8 @@ app.get('/api/history', async (req, res) => {
     console.error('Error fetching history:', error);
     res.status(500).json({ success: false, error: 'Failed to fetch history' });
   }
+  console.log('GET /api/history');
+  
 });
 
 // Route to update song feedback
