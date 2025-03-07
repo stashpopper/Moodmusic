@@ -6,8 +6,10 @@ require('dotenv').config(); // Load environment variables
 
 const app = express();
 app.use(cors({
-  origin: ['http://localhost:5000', 'https://clever-marigold-6e1a21.netlify.app', 'https://moodmusic-production.up.railway.app'],
-  credentials: true
+  origin: ['http://localhost:5000', 'https://clever-marigold-6e1a21.netlify.app'],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(express.json()); // Middleware to parse JSON
 
@@ -83,5 +85,69 @@ app.post('/api/recommendations', async (req, res) => {
   }
 });
 
+// Route to save song to history
+app.post('/api/history', async (req, res) => {
+  try {
+    const { songTitle, artist, youtubeLink, mood, language, genre } = req.body;
+    const history = new SongHistory({
+      songTitle,
+      artist,
+      youtubeLink,
+      mood,
+      language,
+      genre
+    });
+    await history.save();
+    res.json({ success: true, history });
+  } catch (error) {
+    console.error('Error saving to history:', error);
+    res.status(500).json({ success: false, error: 'Failed to save to history' });
+  }
+});
+
+// Route to get song history
+app.get('/api/history', async (req, res) => {
+  try {
+    const history = await SongHistory.find().sort({ timestamp: -1 }).limit(100);
+    res.json({ success: true, history });
+  } catch (error) {
+    console.error('Error fetching history:', error);
+    res.status(500).json({ success: false, error: 'Failed to fetch history' });
+  }
+});
+
+// Route to update song feedback
+app.put('/api/history/:id/feedback', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { feedback } = req.body;
+    const updated = await SongHistory.findByIdAndUpdate(
+      id,
+      { feedback },
+      { new: true }
+    );
+    res.json({ success: true, updated });
+  } catch (error) {
+    console.error('Error updating feedback:', error);
+    res.status(500).json({ success: false, error: 'Failed to update feedback' });
+  }
+});
+
+// Route to delete a song from history
+app.delete('/api/history/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deletedSong = await SongHistory.findByIdAndDelete(id);
+    if (!deletedSong) {
+      return res.status(404).json({ success: false, error: 'Song not found' });
+    }
+    res.json({ success: true, message: 'Song deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting song:', error);
+    res.status(500).json({ success: false, error: 'Failed to delete song' });
+  }
+});
+
 // Start the Server
-app.listen(5000, () => console.log('Server running on http://localhost:5000'));
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
