@@ -628,6 +628,75 @@ h2::after {
 /* Responsive styling */
 @media (max-width: 768px) {
   .app-container {
+    padding: 0.5rem;
+  }
+  
+  #root {
+    padding: 0.75rem;
+  }
+
+  h1 {
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+  }
+
+  h2 {
+    font-size: 1.4rem;
+  }
+
+  .input-section {
+    padding: 1.25rem;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .songs-grid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .song-card, .history-card {
+    padding: 1.25rem;
+  }
+
+  .song-image {
+    height: 160px;
+    margin-bottom: 1rem;
+  }
+
+  .song-info h3 {
+    font-size: 1.05rem;
+  }
+
+  .song-info .artist {
+    font-size: 0.9rem;
+  }
+
+  .tags {
+    margin-bottom: 0.75rem;
+  }
+  
+  .tag {
+    padding: 0.25rem 0.6rem;
+    font-size: 0.75rem;
+  }
+  
+  .listen-btn {
+    padding: 0.6rem 1rem;
+    font-size: 0.85rem;
+  }
+  
+  .primary-btn, .secondary-btn {
+    width: 100%;
+    padding: 0.7rem 1rem;
+    font-size: 0.9rem;
+  }
+  
+  .welcome-section, .auth-required-message, .empty-state {
+    padding: 2rem 1rem;
+  }
+
+  .app-container {
     padding: 1rem;
   }
   
@@ -876,4 +945,41 @@ h2::after {
   color: var(--text-light);
   font-size: 0.95rem;
   text-align: center;
+}
+
+/* Extra small devices */
+@media (max-width: 480px) {
+  #root {
+    padding: 0.5rem;
+  }
+  
+  h1 {
+    font-size: 1.6rem;
+  }
+  
+  .song-card, .history-card {
+    padding: 1rem;
+  }
+  
+  .input-section {
+    padding: 1rem;
+  }
+  
+  .music-visual {
+    height: 80px;
+  }
+  
+  .history-actions {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .history-actions .listen-btn {
+    width: 100%;
+  }
+  
+  .feedback-buttons {
+    justify-content: center;
+    width: 100%;
+  }
 }

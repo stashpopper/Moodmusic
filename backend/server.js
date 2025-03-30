@@ -225,7 +225,7 @@ app.post('/api/recommendations', async (req, res) => {
   try {
     const { mood, language, genre } = req.body;
 
-    const prompt = `You are a music expert. Suggest 5 diverse ${language} ${genre} songs that match a ${mood} mood. Format: "Song Title - Artist Name"`;
+    const prompt = `You are a music expert. Suggest 5 diverse ${language} ${genre} songs that match the ${mood} theme. Format: Song Title - Artist Name. Give the exact song titles and artist names. `;
     const mistralResponse = await axios.post('https://api.mistral.ai/v1/chat/completions', {
       messages: [{ role: "user", content: prompt }],
       model: "mistral-large-2411",

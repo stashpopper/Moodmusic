@@ -63,12 +63,12 @@
   padding-top: 1.75rem;
 }
 
-/* Fix the community badge positioning and styling */
+/* Improved Community badge - repositioned to top-right with better z-index */
 .community-card::before {
   content: 'Community';
   position: absolute;
-  bottom: 6.45rem;
-  right: 2.4rem;
+  top: 0.5rem;
+  right: 0.5rem;
   background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
   color: white;
   padding: 0.3rem 0.75rem;
@@ -76,23 +76,129 @@
   font-size: 0.75rem;
   font-weight: 600;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  z-index: 1;
+  z-index: 2;
+}
+
+/* Adjust song image to make space for the badge */
+.community-card .song-image {
+  position: relative;
+  margin-top: 0.5rem;
+}
+
+/* Make sure tags display properly with better spacing */
+.community-card .tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.community-card .tag {
+  margin-right: 0;
+  margin-bottom: 0.3rem;
 }
 
 @media (max-width: 768px) {
   .filters-section {
     padding: 1rem 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .filters-section h2 {
+    font-size: 1.3rem;
+  }
+  
+  .filter-intro {
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
   }
   
   .filter-form {
     grid-template-columns: 1fr;
-    gap: 1rem;
+    gap: 0.75rem;
   }
   
   .community-card::before {
-    left: 1rem;
+    top: 0.3rem;
+    right: 0.3rem;
     padding: 0.25rem 0.6rem;
     font-size: 0.7rem;
+  }
+  
+  .community-grid {
+    margin-top: 1.5rem;
+  }
+  
+  .pagination {
+    flex-direction: column;
+    gap: 0.75rem;
+    margin: 1.5rem 0;
+  }
+  
+  .page-numbers {
+    order: -1;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .page-number {
+    width: 32px;
+    height: 32px;
+    font-size: 0.85rem;
+  }
+  
+  .pagination-btn {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem;
+    width: 100%;
+    max-width: 200px;
+  }
+  
+  .results-info {
+    font-size: 0.8rem;
+  }
+  
+  /* Improve song cards on mobile */
+  .song-card h3 {
+    font-size: 1rem;
+  }
+  
+  .song-card .artist {
+    font-size: 0.85rem;
+  }
+  
+  .tag {
+    padding: 0.25rem 0.6rem;
+    font-size: 0.7rem;
+  }
+  
+  .listen-btn {
+    padding: 0.6rem 1rem;
+    font-size: 0.8rem;
+  }
+}
+
+/* Small mobile devices */
+@media (max-width: 480px) {
+  .community-container {
+    margin-top: 0.5rem;
+  }
+  
+  .song-image {
+    height: 150px;
+  }
+  
+  .filters-section h2 {
+    font-size: 1.2rem;
+  }
+  
+  .page-numbers {
+    gap: 0.3rem;
+  }
+  
+  .page-number {
+    width: 28px;
+    height: 28px;
   }
 }
 
@@ -173,4 +279,4 @@
   .page-numbers {
     order: -1;
   }
-} 
+}
