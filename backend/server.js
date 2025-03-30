@@ -1,6 +1,5 @@
 const express = require('express');
 const mongoose = require('mongoose');
-// We'll conditionally use CORS for local development
 const cors = require('cors');
 const axios = require('axios');
 const jwt = require('jsonwebtoken');
@@ -9,18 +8,37 @@ require('dotenv').config();
 
 const app = express();
 
-// Use CORS middleware only in development environment
-// In production, NGINX will handle CORS
+// Environment-specific CORS handling
 const isProduction = process.env.NODE_ENV === 'production';
-if (!isProduction) {
-  console.log('Running in development mode - using CORS middleware');
+if (isProduction) {
+  // In production, use more restrictive CORS that only allows the Netlify frontend
+  app.use(cors({
+    origin: 'https://themoodmusic.netlify.app',
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    credentials: true
+  }));
+  
+  // Additional CORS headers for production
+  app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', 'https://themoodmusic.netlify.app');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    if (req.method === 'OPTIONS') {
+      return res.status(200).end();
+    }
+    next();
+  });
+  
+  console.log('Running in production mode with restricted CORS');
+} else {
+  // In development, allow multiple origins
   app.use(cors({
     origin: ['http://localhost:5173', 'http://localhost:3000', 'https://themoodmusic.netlify.app'],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     credentials: true
   }));
-} else {
-  console.log('Running in production mode - CORS handled by NGINX');
+  console.log('Running in development mode with permissive CORS');
 }
 
 app.use(express.json()); // Middleware to parse JSON
