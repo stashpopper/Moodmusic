@@ -1,57 +1,36 @@
-# Stage 1: Build Frontend
-FROM node:20-alpine as frontend-builder
-
+# Build stage for frontend
+FROM node:18-alpine AS frontend-build
 WORKDIR /app/frontend
-
-# Copy frontend package files
-COPY frontend/package*.json ./
-
-# Install frontend dependencies
+COPY frontend/package.json frontend/bun.lockb ./
 RUN npm install
-
-# Copy frontend source code
 COPY frontend/ ./
-
-# Build frontend
 RUN npm run build
 
-# Stage 2: Build and run backend
-FROM node:20-alpine
-
-# Create app directory
-WORKDIR /app
-
-# Copy backend package files
-COPY backend/package*.json ./
-
-# Install backend production dependencies only
-RUN npm install --only=production
-
-# Copy backend files
+# Build stage for backend
+FROM node:18-alpine AS backend-build
+WORKDIR /app/backend
+COPY backend/package.json ./
+RUN npm install
 COPY backend/ ./
 
-# Copy built frontend files
-COPY --from=frontend-builder /app/frontend/dist ./public
+# Production stage
+FROM nginx:alpine
+WORKDIR /app
 
-# Create non-root user
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+# Copy built frontend
+COPY --from=frontend-build /app/frontend/dist /usr/share/nginx/html
 
-# Set proper permissions
-RUN chown -R appuser:appgroup /app
+# Copy backend
+COPY --from=backend-build /app/backend /app/backend
 
-# Switch to non-root user
-USER appuser
+# Copy NGINX configuration
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Environment variables
-ENV NODE_ENV=production
-ENV PORT=3000
-ENV MISTRAL_API_KEY='u0OB4jjq6lnE3qDButeAbONHKnxx6Vvj'
-ENV MONGODB_URI="mongodb+srv://hritam:sushanta@hritam.s0pgx.mongodb.net/?retryWrites=true&w=majority&appName=Hritam"
-ENV LASTFM_API_KEY='39710bc3d90394f50aab976eca17a709'
+# Install Node.js for backend
+RUN apk add --update nodejs npm
 
+# Expose ports
+EXPOSE 80 5000
 
-# Expose port
-EXPOSE 3000
-
-# Start the application
-CMD ["node", "server.js"]
+# Start NGINX and Node.js server
+CMD ["sh", "-c", "cd /app/backend && npm start & nginx -g 'daemon off;'"]

@@ -21,7 +21,6 @@ body {
   min-width: 320px;
   min-height: 100vh;
   font-family: 'Inter', sans-serif;
-  background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
 }
 
 /* Default focus styles */
