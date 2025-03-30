@@ -19,7 +19,7 @@ app.use((req, res, next) => {
 });
 
 // Test route to verify the API is working
-app.get('/api/test', (req, res) => {
+app.get('/test', (req, res) => {
   res.json({ success: true, message: 'Backend API is working!' });
 });
 
