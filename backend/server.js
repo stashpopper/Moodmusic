@@ -84,7 +84,7 @@ userSchema.pre('save', async function(next) {
 
 const Profile = mongoose.model('Profile', userSchema);
 
-// Song History Schema and Model
+
 const songHistorySchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'Profile' },
   songTitle: String,
@@ -98,16 +98,15 @@ const songHistorySchema = new mongoose.Schema({
 });
 const SongHistory = mongoose.model('SongHistory', songHistorySchema);
 
-// Middleware to verify JWT token
+
 const verifyToken = (req, res, next) => {
   const token = req.headers.authorization?.split(' ')[1];
   
   if (!token) {
-    // For routes that need authentication
     if (req.originalUrl.includes('/api/protected')) {
       return res.status(401).json({ success: false, error: 'Access denied. No token provided.' });
     }
-    // For routes where authentication is optional
+
     req.user = null;
     return next();
   }
@@ -121,16 +120,15 @@ const verifyToken = (req, res, next) => {
   }
 };
 
-// Apply the middleware to all routes (will differentiate with req.user)
+
 app.use(verifyToken);
 
-// AUTH ROUTES
-// Register endpoint
+
 app.post('/api/auth/register', async (req, res) => {
   try {
     const { username, email, password } = req.body;
     
-    // Check if user already exists
+
     const existingProfile = await Profile.findOne({ $or: [{ email }, { username }] });
     if (existingProfile) {
       return res.status(400).json({ 
@@ -139,11 +137,11 @@ app.post('/api/auth/register', async (req, res) => {
       });
     }
     
-    // Create new user
+
     const user = new Profile({ username, email, password });
     await user.save();
     
-    // Generate JWT token
+
     const token = jwt.sign(
       { id: user._id, username: user.username }, 
       process.env.JWT_SECRET,
@@ -320,13 +318,13 @@ app.get('/api/community', async (req, res) => {
   }
 });
 
-// Route to update song feedback (only for authenticated users)
+
 app.put('/api/protected/history/:id/feedback', async (req, res) => {
   try {
     const { id } = req.params;
     const { feedback } = req.body;
     
-    // Make sure the song belongs to the authenticated user
+
     const song = await SongHistory.findById(id);
     if (!song) {
       return res.status(404).json({ success: false, error: 'Song not found' });
@@ -349,12 +347,12 @@ app.put('/api/protected/history/:id/feedback', async (req, res) => {
   }
 });
 
-// Route to delete a song from history (only for authenticated users)
+
 app.delete('/api/protected/history/:id', async (req, res) => {
   try {
     const { id } = req.params;
     
-    // Make sure the song belongs to the authenticated user
+ 
     const song = await SongHistory.findById(id);
     if (!song) {
       return res.status(404).json({ success: false, error: 'Song not found' });
@@ -372,18 +370,17 @@ app.delete('/api/protected/history/:id', async (req, res) => {
   }
 });
 
-// BACKWARDS COMPATIBILITY - for the transition period
-// Old route that will be deprecated
+
 app.get('/api/history', async (req, res) => {
   try {
     let history = [];
     if (req.user) {
-      // Authenticated user - get their history
+  
       history = await SongHistory.find({ userId: req.user.id })
         .sort({ timestamp: -1 })
         .limit(100);
     } else {
-      // Guest user - return empty history
+  
       history = [];
     }
     
@@ -394,11 +391,11 @@ app.get('/api/history', async (req, res) => {
   }
 });
 
-// Start the Server (only in non-serverless environments)
+
 if (process.env.NODE_ENV !== 'production') {
   const PORT = process.env.PORT || 5000;
   app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 }
 
-// Export the Express app for serverless environments (Vercel)
+
 module.exports = app;
