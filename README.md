@@ -54,14 +54,24 @@
    JWT_SECRET=your_jwt_secret
    ```
 
-3. **Run with Docker**
+   
 
+3. **Run with Bun or Docker**
+```bash
+npm i
+#frontend
+bun dev
+#backend
+nodemon server.js
+#build
+bun run build
+```   
    ```bash
    docker build -t moodmusic .
    docker run -p 3000:3000 moodmusic
    ```
 
-4. **Access the Application**
+5. **Access the Application**
 
    Open your browser and navigate to `http://localhost:3000` to use MoodMusic locally.
 
