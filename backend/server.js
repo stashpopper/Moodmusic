@@ -13,7 +13,7 @@ const isProduction = process.env.NODE_ENV === 'production';
 if (isProduction) {
   // In production, use more restrictive CORS that only allows the Netlify frontend
   app.use(cors({
-    origin: 'https://themoodmusic.netlify.app',
+    origin: 'https://moodandmusic.netlify.app',
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     credentials: true
   }));
