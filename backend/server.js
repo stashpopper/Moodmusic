@@ -34,7 +34,7 @@ if (isProduction) {
 } else {
   // In development, allow multiple origins
   app.use(cors({
-    origin: ['http://localhost:5173', 'http://localhost:3000', 'https://themoodmusic.netlify.app'],
+    origin: ['http://localhost:5173', 'http://localhost:3000', 'https://moodandmusic.netlify.app'],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     credentials: true
   }));
