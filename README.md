@@ -3,9 +3,6 @@
 
 **MoodMusic** is an innovative web application that curates personalized music playlists based on your current mood. By leveraging mood detection algorithms, it enhances your listening experience, ensuring that the music resonates with your emotional state.
 
-🔗 **Live Demo**: [themoodmusic.netlify.app](https://themoodmusic.netlify.app)
-
----
 
 ## 🚀 Features
 
