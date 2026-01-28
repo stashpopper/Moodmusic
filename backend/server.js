@@ -10,6 +10,7 @@ const app = express();
 app.use(cors({
   origin: ['https://moodandmusic.netlify.app', 'http://localhost:5173', 'http://localhost:3000'],
   credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.options('*', cors());
@@ -25,11 +26,8 @@ app.use('/api/auth', authRoutes);
 app.use('/api/protected/history', historyRoutes);
 app.use('/api', recommendationRoutes);
 
-// General Community Route (if not in recommendationRoutes)
-const { communitySongs } = require('./src/controllers/recommendationsController');
-app.get('/api/community', communitySongs);
-
 if (process.env.NODE_ENV !== 'production') {
+
   const PORT = process.env.PORT || 5000;
   app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 }
