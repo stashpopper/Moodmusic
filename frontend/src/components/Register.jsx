@@ -1,8 +1,7 @@
 import { useState } from 'react';
-import { useAuth } from '../context/AuthContext';
 import '../styles/Auth.css';
 
-function Register({ onToggleForm }) {
+function Register({ onToggleForm, register, loading }) {
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -10,9 +9,8 @@ function Register({ onToggleForm }) {
     confirmPassword: ''
   });
   const [formError, setFormError] = useState('');
-  
-  const { register, loading } = useAuth();
-  
+
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -21,37 +19,37 @@ function Register({ onToggleForm }) {
     }));
     setFormError('');
   };
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     // Basic validation
     if (!formData.username || !formData.email || !formData.password || !formData.confirmPassword) {
       setFormError('Please fill in all fields');
       return;
     }
-    
+
     if (formData.password !== formData.confirmPassword) {
       setFormError('Passwords do not match');
       return;
     }
-    
+
     if (formData.password.length < 6) {
       setFormError('Password must be at least 6 characters long');
       return;
     }
-    
+
     const result = await register(formData.username, formData.email, formData.password);
     if (!result.success) {
       setFormError(result.error || 'Registration failed. Please try again.');
     }
   };
-  
+
   return (
     <div className="auth-form-container">
       <h2>Register</h2>
       {formError && <div className="auth-error">{formError}</div>}
-      
+
       <form onSubmit={handleSubmit} className="auth-form">
         <div className="form-group">
           <label htmlFor="username">Username</label>
@@ -65,7 +63,7 @@ function Register({ onToggleForm }) {
             required
           />
         </div>
-        
+
         <div className="form-group">
           <label htmlFor="email">Email</label>
           <input
@@ -78,7 +76,7 @@ function Register({ onToggleForm }) {
             required
           />
         </div>
-        
+
         <div className="form-group">
           <label htmlFor="password">Password</label>
           <input
@@ -91,7 +89,7 @@ function Register({ onToggleForm }) {
             required
           />
         </div>
-        
+
         <div className="form-group">
           <label htmlFor="confirmPassword">Confirm Password</label>
           <input
@@ -104,9 +102,9 @@ function Register({ onToggleForm }) {
             required
           />
         </div>
-        
-        <button 
-          type="submit" 
+
+        <button
+          type="submit"
           className="auth-button primary-btn"
           disabled={loading}
         >
@@ -120,7 +118,7 @@ function Register({ onToggleForm }) {
           )}
         </button>
       </form>
-      
+
       <div className="auth-redirect">
         Already have an account?{' '}
         <button onClick={onToggleForm} className="text-button">

@@ -178,7 +178,7 @@ function Community() {
         <>
           <div className="songs-grid community-grid">
             {currentSongs.map((song) => (
-              <div key={song._id} className="song-card community-card">
+              <div key={song.id} className="song-card community-card">
                 <div className="song-image">
                   <LastFmImage 
                     artist={song.artist}

@@ -1,0 +1,31 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+
+}
+
+model User {
+  id        String   @id @default(uuid())
+  username  String   @unique
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  history   SongHistory[]
+}
+
+model SongHistory {
+  id           String   @id @default(uuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id])
+  songTitle    String
+  artist       String
+  youtubeLink  String
+  mood         String
+  language     String
+  genre        String
+  timestamp    DateTime @default(now())
+ 
+}

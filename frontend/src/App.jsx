@@ -4,7 +4,6 @@ import Navigation from './components/Navigation'
 import LastFmImage from './components/LastFmImage'
 import Auth from './components/Auth'
 import Community from './components/Community'
-import { useAuth } from './context/AuthContext'
 
 function App() {
   const [formData, setFormData] = useState({
@@ -17,10 +16,89 @@ function App() {
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  
-  const { isAuthenticated, user } = useAuth();
+
+  // Auth states
+  const [user, setUser] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [authLoading, setAuthLoading] = useState(true);
 
   const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
+  // Check if user is already authenticated on component mount
+  useEffect(() => {
+    const token = localStorage.getItem('authToken');
+    const userData = localStorage.getItem('userData');
+
+    if (token && userData) {
+      try {
+        setUser(JSON.parse(userData));
+        setIsAuthenticated(true);
+      } catch (e) {
+        console.error('Error parsing user data:', e);
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('userData');
+      }
+    }
+    setAuthLoading(false);
+  }, []);
+
+  const login = async (email, password) => {
+    setLoading(true);
+    try {
+      const response = await fetch(`${BASE_URL}/api/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'Login failed');
+
+      localStorage.setItem('authToken', data.token);
+      localStorage.setItem('userData', JSON.stringify(data.user));
+      setUser(data.user);
+      setIsAuthenticated(true);
+      setActiveTab('recommendations');
+      return { success: true };
+    } catch (error) {
+      return { success: false, error: error.message };
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const register = async (username, email, password) => {
+    setLoading(true);
+    try {
+      const response = await fetch(`${BASE_URL}/api/auth/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, email, password })
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'Registration failed');
+
+      localStorage.setItem('authToken', data.token);
+      localStorage.setItem('userData', JSON.stringify(data.user));
+      setUser(data.user);
+      setIsAuthenticated(true);
+      setActiveTab('recommendations');
+      return { success: true };
+    } catch (error) {
+      return { success: false, error: error.message };
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const logout = () => {
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('userData');
+    setUser(null);
+    setIsAuthenticated(false);
+    setActiveTab('home');
+  };
+
+
 
   // Fetch history on component mount and when authentication status changes
   useEffect(() => {
@@ -31,7 +109,7 @@ function App() {
 
   const fetchHistory = async () => {
     if (!isAuthenticated) return;
-    
+
     try {
       setLoading(true);
       const token = localStorage.getItem('authToken');
@@ -40,9 +118,9 @@ function App() {
           'Authorization': `Bearer ${token}`
         }
       });
-      
+
       const data = await response.json();
-      
+
       if (data.success) {
         setHistory(data.history);
       } else {
@@ -76,15 +154,15 @@ function App() {
         },
         body: JSON.stringify(formData)
       });
-      
+
       const data = await response.json();
       if (!response.ok) {
         throw new Error(data.error || 'Failed to get recommendations');
       }
-      
+
       if (data.success && data.recommendations) {
         setRecommendations(data.recommendations);
-        
+
         // Only save to history if user is authenticated
         if (isAuthenticated) {
           // Save to history with error handling
@@ -105,7 +183,7 @@ function App() {
                   youtubeLink: song.link
                 })
               });
-              
+
               if (!response.ok) {
                 const errorData = await response.json();
                 throw new Error(errorData.error || 'Failed to save to history');
@@ -114,7 +192,7 @@ function App() {
               console.error('Error saving song to history:', error);
             }
           });
-          
+
           await Promise.all(savePromises);
           await fetchHistory(); // Refresh history after all saves complete
         }
@@ -128,35 +206,11 @@ function App() {
     }
   };
 
-  const handleFeedback = async (songId, feedback) => {
-    if (!isAuthenticated) return;
-    
-    try {
-      const token = localStorage.getItem('authToken');
-      const response = await fetch(`${BASE_URL}/api/protected/history/${songId}/feedback`, {
-        method: 'PUT',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ feedback })
-      });
-      
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to update feedback');
-      }
-      
-      await fetchHistory(); // Refresh history
-    } catch (error) {
-      console.error('Error updating feedback:', error);
-      setError('Failed to update feedback. Please try again.');
-    }
-  };
+  
 
   const handleDeleteSong = async (songId) => {
     if (!isAuthenticated) return;
-    
+
     try {
       setLoading(true);
       const token = localStorage.getItem('authToken');
@@ -166,15 +220,15 @@ function App() {
           'Authorization': `Bearer ${token}`
         }
       });
-      
+
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.error || 'Failed to delete song');
       }
-      
+
       // Remove from local state
-      setHistory(prevHistory => prevHistory.filter(item => item._id !== songId));
-      
+      setHistory(prevHistory => prevHistory.filter(item => item.id !== songId));
+
     } catch (error) {
       console.error('Error deleting song:', error);
       setError('Failed to delete song. Please try again.');
@@ -188,9 +242,9 @@ function App() {
       <div className="input-section">
         <div className="input-group">
           <label htmlFor="mood">Mood</label>
-          <select 
+          <select
             id="mood"
-            name="mood" 
+            name="mood"
             value={formData.mood}
             onChange={handleInputChange}
             required
@@ -206,9 +260,9 @@ function App() {
 
         <div className="input-group">
           <label htmlFor="language">Language</label>
-          <select 
+          <select
             id="language"
-            name="language" 
+            name="language"
             value={formData.language}
             onChange={handleInputChange}
             required
@@ -224,9 +278,9 @@ function App() {
 
         <div className="input-group">
           <label htmlFor="genre">Genre</label>
-          <select 
+          <select
             id="genre"
-            name="genre" 
+            name="genre"
             value={formData.genre}
             onChange={handleInputChange}
             required
@@ -247,7 +301,7 @@ function App() {
           </select>
         </div>
 
-        <button 
+        <button
           className="primary-btn"
           onClick={getRecommendations}
           disabled={loading || !formData.mood || !formData.language || !formData.genre}
@@ -273,7 +327,7 @@ function App() {
             {recommendations.map((song, index) => (
               <div key={index} className="song-card">
                 <div className="song-image">
-                  <LastFmImage 
+                  <LastFmImage
                     artist={song.title.split(' - ')[1]}
                     track={song.title.split(' - ')[0]}
                   />
@@ -336,7 +390,7 @@ function App() {
         </div>
       );
     }
-    
+
     return (
       <div className="history-section">
         <h2>Your Listening History</h2>
@@ -358,9 +412,9 @@ function App() {
         ) : (
           <div className="songs-grid history-grid">
             {history.map((item) => (
-              <div key={item._id} className="history-card">
+              <div key={item.id} className="history-card">
                 <div className="song-image">
-                  <LastFmImage 
+                  <LastFmImage
                     artist={item.artist}
                     track={item.songTitle}
                   />
@@ -374,35 +428,18 @@ function App() {
                     <span className="tag genre">{item.genre}</span>
                   </div>
                 </div>
-                
+
                 <div className="history-actions">
-                  <div className="feedback-buttons">
-                    <button 
-                      className={item.feedback === 'liked' ? 'active' : ''}
-                      onClick={() => handleFeedback(item._id, 'liked')}
-                      title="Like"
-                    >
-                      👍
-                    </button>
-                    <button 
-                      className={item.feedback === 'disliked' ? 'active' : ''}
-                      onClick={() => handleFeedback(item._id, 'disliked')}
-                      title="Dislike"
-                    >
-                      👎
-                    </button>
-                  </div>
-                  
                   <a href={item.youtubeLink} target="_blank" rel="noopener noreferrer" className="listen-btn">
                     <span className="icon">▶</span>
                     <span>Listen Again</span>
                   </a>
                 </div>
-                
+
                 <div className="song-actions">
-                  <button 
+                  <button
                     className="delete-btn"
-                    onClick={() => handleDeleteSong(item._id)}
+                    onClick={() => handleDeleteSong(item.id)}
                     title="Delete from history"
                   >
                     🗑️
@@ -426,7 +463,13 @@ function App() {
       case 'history':
         return renderHistoryPage();
       case 'auth':
-        return <Auth setActiveTab={setActiveTab} />;
+        return <Auth
+          setActiveTab={setActiveTab}
+          login={login}
+          register={register}
+          isAuthenticated={isAuthenticated}
+          loading={loading}
+        />;
       default:
         return <Community />;
     }
@@ -435,18 +478,24 @@ function App() {
   return (
     <div className="app-container">
       <header className="app-header">
-        <Navigation activeTab={activeTab} setActiveTab={setActiveTab} />
+        <Navigation
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          isAuthenticated={isAuthenticated}
+          user={user}
+          logout={logout}
+        />
       </header>
-      
+
       <div className="content">
         <h1>MoodMusic</h1>
-        
+
         {error && (
           <div className="error-message">
             {error}
           </div>
         )}
-        
+
         {activeTab !== 'auth' && loading && (
           <div className="loading-spinner">
             <div className="music-visual">
@@ -460,7 +509,14 @@ function App() {
           </div>
         )}
 
-        {renderContent()}
+        {authLoading ? (
+          <div className="loading-spinner">
+            <p>Checking authentication...</p>
+          </div>
+        ) : (
+          renderContent()
+        )}
+
       </div>
     </div>
   );
