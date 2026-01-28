@@ -9,10 +9,11 @@ const app = express();
 // Middleware
 app.use(cors({
   origin: ['https://moodandmusic.netlify.app', 'http://localhost:5173', 'http://localhost:3000'],
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true,
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
+app.options('*', cors());
 app.use(express.json());
 
 // Import Routes
