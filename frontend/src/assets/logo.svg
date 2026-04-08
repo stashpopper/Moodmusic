@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 100" width="300" height="100">
+  <defs>
+    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7c5ef0" />
+      <stop offset="50%" stop-color="#8e7dff" />
+      <stop offset="100%" stop-color="#ff7eb3" />
+    </linearGradient>
+    
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="4" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+  
+  <!-- Abstract musical wave background -->
+  <path d="M20,60 Q40,20 60,60 T100,60 T140,60 T180,60 T220,60 T260,60 T280,60"
+        stroke="url(#gradient)" 
+        stroke-width="3" 
+        fill="none"
+        stroke-linecap="round"
+        opacity="0.8"/>
+  
+  <!-- Main logo text with modern styling -->
+  <text x="120" y="45" 
+        font-family="'Poppins', sans-serif" 
+        font-size="32" 
+        font-weight="700" 
+        fill="url(#gradient)" 
+        letter-spacing="-1">
+    Mood
+  </text>
+  
+  <text x="120" y="75" 
+        font-family="'Poppins', sans-serif" 
+        font-size="32" 
+        font-weight="700" 
+        fill="url(#gradient)" 
+        letter-spacing="-1">
+    Music
+  </text>
+  
+  <!-- Decorative musical note -->
+  <g transform="translate(80, 30)" filter="url(#glow)">
+    <path d="M0,0 L0,20 L10,20 L10,0 Z" fill="#ff7eb3" />
+    <circle cx="15" cy="10" r="8" fill="#7c5ef0" />
+    <path d="M20,8 Q25,6 30,8" stroke="#8e7dff" stroke-width="2" fill="none" />
+  </g>
+  
+  <!-- Subtle glow effect -->
+  <ellipse cx="150" cy="50" rx="120" ry="25" 
+           fill="url(#gradient)" 
+           opacity="0.05" 
+           filter="url(#glow)"/>
+</svg>

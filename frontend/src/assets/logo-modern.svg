@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 60" width="200" height="60">
+  <defs>
+    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7c5ef0" />
+      <stop offset="100%" stop-color="#ff7eb3" />
+    </linearGradient>
+    
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&display=swap');
+    </style>
+  </defs>
+  
+  <!-- Modern abstract wave -->
+  <path d="M15,35 Q30,15 45,35 T75,35 T105,35" 
+        stroke="url(#gradient)" 
+        stroke-width="3" 
+        fill="none" 
+        stroke-linecap="round" 
+        opacity="0.9"/>
+  
+  <!-- MoodMusic text with modern styling -->
+  <text x="55" y="28" 
+        font-family="'Poppins', Arial, sans-serif" 
+        font-size="20" 
+        font-weight="700" 
+        fill="url(#gradient)" 
+        letter-spacing="-1">
+    MoodMusic
+  </text>
+  
+  <!-- Stylish musical note -->
+  <g transform="translate(35, 20)">
+    <path d="M0,0 L0,12 L6,12 L6,0 Z" fill="#ff7eb3" opacity="0.8"/>
+    <circle cx="9" cy="6" r="4" fill="#7c5ef0" />
+    <path d="M12,4 Q16,2 20,4" stroke="#ff7eb3" stroke-width="2" fill="none" />
+  </g>
+  
+  <!-- Subtle glow background -->
+  <ellipse cx="100" cy="30" rx="80" ry="20" 
+           fill="url(#gradient)" 
+           opacity="0.08"/>
+</svg>

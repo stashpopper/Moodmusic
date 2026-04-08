@@ -7,9 +7,7 @@ const register = async (req, res) => {
     const { username, email, password } = req.body;
 
     const existingUser = await prisma.user.findFirst({
-      where: {
-        OR: [{ email }, { username }]
-      }
+      where: { OR: [{ email }, { username }] }
     });
 
     if (existingUser) {
@@ -21,11 +19,7 @@ const register = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await prisma.user.create({
-      data: {
-        username,
-        email,
-        password: hashedPassword
-      }
+      data: { username, email, password: hashedPassword }
     });
 
     const token = jwt.sign(
@@ -49,9 +43,7 @@ const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const user = await prisma.user.findUnique({
-      where: { email }
-    });
+    const user = await prisma.user.findUnique({ where: { email } });
 
     if (!user) {
       return res.status(400).json({ success: false, error: 'Invalid email or password' });
@@ -79,4 +71,11 @@ const login = async (req, res) => {
   }
 };
 
-module.exports = { register, login };
+const getUser = (req, res) => {
+  if (req.user) {
+    return res.json({ success: true, isAuthenticated: true, user: req.user });
+  }
+  res.json({ success: true, isAuthenticated: false, user: null });
+};
+
+module.exports = { register, login, getUser };

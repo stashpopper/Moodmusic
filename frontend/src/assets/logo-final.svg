@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 40" width="160" height="40">
+  <defs>
+    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7c5ef0" />
+      <stop offset="100%" stop-color="#ff7eb3" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Compact musical wave -->
+  <path d="M10,20 Q20,5 30,20 T45,20" 
+        stroke="url(#gradient)" 
+        stroke-width="2" 
+        fill="none" 
+        stroke-linecap="round"/>
+  
+  <!-- MoodMusic text -->
+  <text x="50" y="18" 
+        font-family="Arial, sans-serif" 
+        font-size="14" 
+        font-weight="bold" 
+        fill="url(#gradient)" 
+        letter-spacing="-0.5">
+    MoodMusic
+  </text>
+  
+  <!-- Simple musical note -->
+  <circle cx="35" cy="15" r="2" fill="#ff7eb3" />
+  <path d="M40,13 L40,18" stroke="#7c5ef0" stroke-width="1.5" />
+</svg>

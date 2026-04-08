@@ -33,26 +33,16 @@
   z-index: 1;
 }
 
-.logo h2 {
-  margin: 0;
-  font-size: 1.8rem;
-  font-family: var(--heading-font);
-  font-weight: 700;
-  background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  letter-spacing: -0.5px;
-  position: relative;
+.logo-image {
+  height: 80px;
+  width: auto;
+  transition: transform 0.3s ease;
+  display: block;
+  margin-right: 1rem;
 }
 
-.logo h2::after {
-  content: '🎵';
-  position: absolute;
-  top: -5px;
-  right: -25px;
-  font-size: 1.2rem;
-  transform: rotate(15deg);
+.logo-image:hover {
+  transform: scale(1.05);
 }
 
 .logo span {
@@ -193,9 +183,9 @@
     gap: 0.5rem;
   }
 
-  .logo h2 {
-    font-size: 1.5rem;
-    margin-bottom: 0.5rem;
+  .logo-image {
+    height: 50px;
+    margin-right: 0.5rem;
   }
 
   .nav-links button {
@@ -233,14 +223,11 @@
     padding: 0.75rem;
   }
   
-  .logo h2 {
-    font-size: 1.3rem;
+  .logo-image {
+    height: 60px;
+    margin-right: 0.5rem;
   }
-  
-  .logo h2::after {
-    display: none;
-  }
-  
+
   .nav-links {
     flex-wrap: wrap;
   }

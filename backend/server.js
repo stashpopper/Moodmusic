@@ -20,11 +20,13 @@ app.use(express.json());
 const authRoutes = require('./src/routes/authRoutes');
 const historyRoutes = require('./src/routes/historyRoutes');
 const recommendationRoutes = require('./src/routes/recommendationRoutes');
+const lyricsRoutes = require('./src/routes/lyricsRoutes');
 
 // Use Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/protected/history', historyRoutes);
 app.use('/api', recommendationRoutes);
+app.use('/api', lyricsRoutes);
 
 if (process.env.NODE_ENV !== 'production') {
 

@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 100" width="300" height="100">
+  <defs>
+    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7c5ef0" />
+      <stop offset="100%" stop-color="#ff7eb3" />
+    </linearGradient>
+    
+    <filter id="soft-glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="3" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+    
+    <style>
+      .text-shadow {
+        filter: drop-shadow(0 2px 2px rgba(124, 94, 240, 0.3));
+      }
+    </style>
+  </defs>
+  
+  <!-- Subtle background glow -->
+  <rect width="100%" height="100%" rx="10" 
+        fill="url(#gradient)" 
+        opacity="0.05" 
+        filter="url(#soft-glow)"/>
+  
+  <!-- Abstract musical wave - elegant and flowing -->
+  <path d="M30,60 Q60,20 90,60 T150,60 T210,60 T270,60" 
+        stroke="url(#gradient)" 
+        stroke-width="5" 
+        fill="none" 
+        stroke-linecap="round" 
+        stroke-linejoin="round"
+        opacity="0.8"/>
+  
+  <!-- MoodMusic text - modern typography -->
+  <g class="text-shadow">
+    <text x="100" y="45" 
+          font-family="Arial, sans-serif" 
+          font-size="28" 
+          font-weight="700" 
+          fill="url(#gradient)" 
+          letter-spacing="-1.5">
+      Mood
+    </text>
+    
+    <text x="100" y="75" 
+          font-family="Arial, sans-serif" 
+          font-size="28" 
+          font-weight="700" 
+          fill="url(#gradient)" 
+          letter-spacing="-1.5">
+      Music
+    </text>
+  </g>
+  
+  <!-- Professional musical note icon -->
+  <g transform="translate(70, 40)" filter="url(#soft-glow)">
+    <!-- Note head with gradient -->
+    <ellipse cx="10" cy="12" rx="8" ry="6" fill="url(#gradient)" />
+    
+    <!-- Note stem -->
+    <path d="M18,10 L18,30" 
+          stroke="#7c5ef0" 
+          stroke-width="3" 
+          fill="none" 
+          stroke-linecap="round"/>
+    
+    <!-- Note flag - stylized -->
+    <path d="M18,10 Q24,6 30,10" 
+          stroke="#ff7eb3" 
+          stroke-width="2.5" 
+          fill="none" 
+          stroke-linecap="round"/>
+  </g>
+  
+  <!-- Decorative elements - musical dots -->
+  <circle cx="250" cy="30" r="3" fill="#ff7eb3" opacity="0.7" />
+  <circle cx="240" cy="70" r="2.5" fill="#7c5ef0" opacity="0.7" />
+  
+  <!-- Subtle highlight on the wave -->
+  <path d="M150,60 Q160,55 170,60" 
+        stroke="white" 
+        stroke-width="1.5" 
+        fill="none" 
+        opacity="0.5"/>
+</svg>

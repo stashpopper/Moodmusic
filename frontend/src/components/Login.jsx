@@ -21,9 +21,16 @@ function Login({ onToggleForm, login, loading }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Basic validation
-    if (!formData.email || !formData.password) {
-      setFormError('Please fill in all fields');
+    if (!formData.email.trim()) {
+      setFormError('Please enter your email');
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())) {
+      setFormError('Please enter a valid email address');
+      return;
+    }
+    if (!formData.password) {
+      setFormError('Please enter your password');
       return;
     }
 

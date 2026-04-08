@@ -4,6 +4,7 @@ import Navigation from './components/Navigation'
 import LastFmImage from './components/LastFmImage'
 import Auth from './components/Auth'
 import Community from './components/Community'
+import LyricsSearch from './components/LyricsSearch'
 
 function App() {
   const [formData, setFormData] = useState({
@@ -462,6 +463,8 @@ function App() {
         return renderRecommendationsPage();
       case 'history':
         return renderHistoryPage();
+      case 'lyrics':
+        return <LyricsSearch />;
       case 'auth':
         return <Auth
           setActiveTab={setActiveTab}

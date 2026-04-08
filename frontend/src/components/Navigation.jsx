@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import '../styles/Navigation.css';
+import logo from '../assets/logo-professional.svg';
 
 function Navigation({ activeTab, setActiveTab, isAuthenticated, user, logout }) {
     const [darkMode, setDarkMode] = useState(() => {
@@ -38,7 +39,7 @@ function Navigation({ activeTab, setActiveTab, isAuthenticated, user, logout }) 
     return (
         <nav className="navigation">
             <div className="logo">
-                <h2>MoodMusic</h2>
+                <img src={logo} alt="MoodMusic Logo" className="logo-image" />
             </div>
             <div className="nav-links">
                 <button
@@ -61,6 +62,12 @@ function Navigation({ activeTab, setActiveTab, isAuthenticated, user, logout }) 
                         History
                     </button>
                 )}
+                <button
+                    className={activeTab === 'lyrics' ? 'active' : ''}
+                    onClick={() => setActiveTab('lyrics')}
+                >
+                    Lyrics Search
+                </button>
             </div>
             <div className="nav-actions">
                 {isAuthenticated ? (

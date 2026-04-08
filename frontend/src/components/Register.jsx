@@ -23,19 +23,36 @@ function Register({ onToggleForm, register, loading }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Basic validation
-    if (!formData.username || !formData.email || !formData.password || !formData.confirmPassword) {
-      setFormError('Please fill in all fields');
+    if (!formData.username.trim()) {
+      setFormError('Please enter a username');
       return;
     }
-
-    if (formData.password !== formData.confirmPassword) {
-      setFormError('Passwords do not match');
+    if (formData.username.trim().length < 3) {
+      setFormError('Username must be at least 3 characters');
       return;
     }
-
+    if (!/^[a-zA-Z0-9_]+$/.test(formData.username.trim())) {
+      setFormError('Username can only contain letters, numbers, and underscores');
+      return;
+    }
+    if (!formData.email.trim()) {
+      setFormError('Please enter your email');
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())) {
+      setFormError('Please enter a valid email address');
+      return;
+    }
+    if (!formData.password) {
+      setFormError('Please enter a password');
+      return;
+    }
     if (formData.password.length < 6) {
       setFormError('Password must be at least 6 characters long');
+      return;
+    }
+    if (formData.password !== formData.confirmPassword) {
+      setFormError('Passwords do not match');
       return;
     }
 
