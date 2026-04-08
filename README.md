@@ -6,6 +6,9 @@
 
 ## 🚀 Features
 
+- **Song Lyrics Search**: Search and view complete song lyrics directly on the site (NEW!)
+  - Powers: Lyrics.ovh API (80% hit rate for popular songs)
+  - Example: "Bohemian Rhapsody", "Shape of You", "Bad Guy"
 - **Mood-Based Playlists**: Receive music recommendations tailored to your current mood.
 - **User-Friendly Interface**: Navigate effortlessly through a sleek and intuitive design.
 - **Real-Time Mood Detection**: Analyze user input to determine mood and suggest appropriate tracks.
@@ -16,57 +19,68 @@
 
 ## 🛠️ Tech Stack
 
-- **Frontend**: React.js, HTML5, CSS3
+- **Frontend**: React.js, HTML5, CSS3, CSS Modules
 - **Backend**: Node.js, Express.js
-- **Database**: MongoDB
+- **Database**: PostgreSQL with Prisma ORM
+- **APIs**: Mistral AI, Lyrics.ovh, YouTube
 - **Containerization**: Docker
 - **Deployment**: Netlify (Frontend), Vercel (Backend)
 
----
-
-## 🧪 Getting Started
+⚠️ Note: Project has migrated from MongoDB to PostgreSQL!
 
 ### Prerequisites
 
-- Node.js (v14 or above)
-- Docker
-- MongoDB
+- Node.js (v18 or above)
+- npm
+- PostgreSQL
 
-### Installation
+### Windows Installation (Local Setup)
 
-1. **Clone the Repository**
+#### 1. **Clone the Repository**
+```cmd
+cd moodmusic
+```
 
-   ```bash
-   git clone https://github.com/HritamBrahmachari/Moodmusic.git
-   cd Moodmusic
-   ```
+#### 2. **Setup Environment Variables**
 
-2. **Setup Environment Variables**
+Create a .env file in the `backend/` directory:
+```env
+DATABASE_URL=your_postgreSQL_connection_string
+JWT_SECRET=your_secret_key
+MISTRAL_API_KEY=your_mistral_key
+```
 
-   Create a `.env` file in the `backend/` directory with the following content:
+💡 **Get PostgreSQL:** Sign up at https://supabase.com/ or use local install
 
-   ```env
-   PORT=5000
-   MONGODB_URI=your_mongodb_connection_string
-   JWT_SECRET=your_jwt_secret
-   ```
+#### 3. **Setup PostgreSQL (Windows Users)**
+!!! Supabase uses PostgreSQL!!!
+```cmd
+# Install dependencies (bash these in Windows)
+cd backend
+npm install
+```
 
-   
+#### 4. **Run Database Migrations**
+```cmd
+cd backend
+npx prisma generate
+npx prisma migrate dev
+```
 
-3. **Run with Bun or Docker**
-```bash
-npm i
-#frontend
-bun dev
-#backend
-nodemon server.js
-#build
-bun run build
-```   
-   ```bash
-   docker build -t moodmusic .
-   docker run -p 3000:3000 moodmusic
-   ```
+#### 5. **Start Development Servers**
+```cmd
+# In first terminal (backend)
+cd backend
+npm run dev
+# Wait for "Server running on port 5000"
+
+# In second terminal (frontend)
+cd frontend
+npm install
+npm run dev
+```
+
+Now visit `http://localhost:5173`
 
 5. **Access the Application**
 
