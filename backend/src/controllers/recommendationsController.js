@@ -58,6 +58,15 @@ const communitySongs = async (req, res) => {
     res.json({ success: true, songs });
   } catch (error) {
     console.error('Error fetching community songs:', error);
+    
+    // Check if this is a database connection error
+    if (error.message.includes('DATABASE_URL') || error.message.includes('database') || error.code === 'P1001') {
+      return res.status(500).json({
+        success: false, 
+        error: 'Database connection not configured. Please set DATABASE_URL in your .env file.'
+      });
+    }
+    
     res.status(500).json({ success: false, error: 'Failed to fetch community songs' });
   }
 };
