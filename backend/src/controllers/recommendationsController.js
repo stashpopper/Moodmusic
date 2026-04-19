@@ -1,5 +1,5 @@
 const axios = require('axios');
-const prisma = require('../config/db');
+const { getPrisma, getDbInitError } = require('../config/db');
 
 const getRecommendations = async (req, res) => {
   try {
@@ -42,6 +42,7 @@ const getRecommendations = async (req, res) => {
 
 const communitySongs = async (req, res) => {
   try {
+    const prisma = getPrisma();
     const { mood, language, genre } = req.query;
 
     const filter = {};
@@ -58,6 +59,14 @@ const communitySongs = async (req, res) => {
     res.json({ success: true, songs });
   } catch (error) {
     console.error('Error fetching community songs:', error);
+
+    const dbInitError = getDbInitError();
+    if (dbInitError) {
+      return res.status(500).json({
+        success: false,
+        error: `Database client failed to initialize: ${dbInitError.message}`
+      });
+    }
     
     // Check if this is a database connection error
     if (error.message.includes('DATABASE_URL') || error.message.includes('database') || error.code === 'P1001') {

@@ -1,7 +1,8 @@
-const prisma = require('../config/db');
+const { getPrisma, getDbInitError } = require('../config/db');
 
 const saveToHistory = async (req, res) => {
   try {
+    const prisma = getPrisma();
     const { songTitle, artist, youtubeLink, mood, language, genre } = req.body;
 
     const history = await prisma.songHistory.create({
@@ -19,12 +20,19 @@ const saveToHistory = async (req, res) => {
     res.json({ success: true, history });
   } catch (error) {
     console.error('Error saving to history:', error);
+
+    const dbInitError = getDbInitError();
+    if (dbInitError) {
+      return res.status(500).json({ success: false, error: `Database client failed to initialize: ${dbInitError.message}` });
+    }
+
     res.status(500).json({ success: false, error: 'Failed to save to history' });
   }
 };
 
 const getHistory = async (req, res) => {
   try {
+    const prisma = getPrisma();
     const history = await prisma.songHistory.findMany({
       where: { userId: req.user.id },
       orderBy: { timestamp: 'desc' },
@@ -34,12 +42,19 @@ const getHistory = async (req, res) => {
     res.json({ success: true, history });
   } catch (error) {
     console.error('Error fetching history:', error);
+
+    const dbInitError = getDbInitError();
+    if (dbInitError) {
+      return res.status(500).json({ success: false, error: `Database client failed to initialize: ${dbInitError.message}` });
+    }
+
     res.status(500).json({ success: false, error: 'Failed to fetch history' });
   }
 };
 
 const deleteHistory = async (req, res) => {
   try {
+    const prisma = getPrisma();
     const { id } = req.params;
 
     const song = await prisma.songHistory.findUnique({
@@ -61,6 +76,12 @@ const deleteHistory = async (req, res) => {
     res.json({ success: true, message: 'Song deleted successfully' });
   } catch (error) {
     console.error('Error deleting song:', error);
+
+    const dbInitError = getDbInitError();
+    if (dbInitError) {
+      return res.status(500).json({ success: false, error: `Database client failed to initialize: ${dbInitError.message}` });
+    }
+
     res.status(500).json({ success: false, error: 'Failed to delete song' });
   }
 };

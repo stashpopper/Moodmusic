@@ -1,19 +1,44 @@
 require('dotenv').config();
 
-const { Pool } = require('pg');
-const { PrismaPg } = require('@prisma/adapter-pg');
-const { PrismaClient } = require('@prisma/client');
+let prisma = null;
+let dbInitError = null;
 
-const connectionString = process.env.DATABASE_URL;
+try {
+    const { Pool } = require('pg');
+    const { PrismaPg } = require('@prisma/adapter-pg');
+    const { PrismaClient } = require('@prisma/client');
 
-const pool = new Pool({
-    connectionString,
-    ssl: {
-        rejectUnauthorized: false
+    const connectionString = process.env.DATABASE_URL;
+
+    const pool = new Pool({
+        connectionString,
+        ssl: {
+            rejectUnauthorized: false
+        }
+    });
+
+    const adapter = new PrismaPg(pool);
+    prisma = new PrismaClient({ adapter });
+} catch (error) {
+    dbInitError = error;
+    console.error('[db] Failed to initialize Prisma/Postgres:', error.message);
+}
+
+const getPrisma = () => {
+    if (dbInitError) {
+        throw dbInitError;
     }
-});
 
-const adapter = new PrismaPg(pool);
-const prisma = new PrismaClient({ adapter });
+    if (!prisma) {
+        throw new Error('Database client is not initialized');
+    }
 
-module.exports = prisma;
+    return prisma;
+};
+
+const getDbInitError = () => dbInitError;
+
+module.exports = {
+    getPrisma,
+    getDbInitError
+};

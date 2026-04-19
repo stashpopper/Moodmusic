@@ -1,9 +1,10 @@
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
-const prisma = require('../config/db');
+const { getPrisma, getDbInitError } = require('../config/db');
 
 const register = async (req, res) => {
   try {
+    const bcrypt = require('bcrypt');
+    const prisma = getPrisma();
     const { username, email, password } = req.body;
 
     const existingUser = await prisma.user.findFirst({
@@ -35,12 +36,20 @@ const register = async (req, res) => {
     });
   } catch (error) {
     console.error('Registration error:', error);
+
+    const dbInitError = getDbInitError();
+    if (dbInitError) {
+      return res.status(500).json({ success: false, error: `Database client failed to initialize: ${dbInitError.message}` });
+    }
+
     res.status(500).json({ success: false, error: 'Registration failed. Please try again.' });
   }
 };
 
 const login = async (req, res) => {
   try {
+    const bcrypt = require('bcrypt');
+    const prisma = getPrisma();
     const { email, password } = req.body;
 
     const user = await prisma.user.findUnique({ where: { email } });
@@ -67,6 +76,12 @@ const login = async (req, res) => {
     });
   } catch (error) {
     console.error('Login error:', error);
+
+    const dbInitError = getDbInitError();
+    if (dbInitError) {
+      return res.status(500).json({ success: false, error: `Database client failed to initialize: ${dbInitError.message}` });
+    }
+
     res.status(500).json({ success: false, error: 'Login failed. Please try again.' });
   }
 };
