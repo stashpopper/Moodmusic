@@ -1,8 +1,5 @@
 require('dotenv').config();
 
-// Bypass self-signed certificate error for Supabase connections
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
-
 const { Pool } = require('pg');
 const { PrismaPg } = require('@prisma/adapter-pg');
 const { PrismaClient } = require('@prisma/client');

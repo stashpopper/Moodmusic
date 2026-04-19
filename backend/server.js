@@ -6,6 +6,8 @@ const dotenv = require('dotenv');
 console.log('=== MoodMusic Backend Starting ===');
 console.log('Environment:', process.env.NODE_ENV || 'development');
 console.log('Port:', process.env.PORT || 5000);
+console.log('DATABASE_URL:', process.env.DATABASE_URL ? 'configured' : 'NOT CONFIGURED');
+console.log('MISTRAL_API_KEY:', process.env.MISTRAL_API_KEY ? 'configured' : 'NOT CONFIGURED');
 
 dotenv.config();
 
@@ -47,6 +49,26 @@ app.listen(PORT, () => {
   console.log(`✓ Server running on port ${PORT}`);
   console.log(`✓ Environment: ${process.env.NODE_ENV || 'development'}`);
   console.log('=== MoodMusic Backend Started Successfully ===');
+});
+
+// Handle 404 errors - return JSON instead of HTML
+app.use((req, res, next) => {
+  next(new Error(`Not Found: ${req.originalUrl} ${req.method}`));
+});
+
+// Handle 500 errors - return JSON instead of HTML
+app.use((err, req, res, next) => {
+  console.error('500 Error:', err.message);
+  res.status(500).json({ success: false, error: 'Internal server error' });
+});
+
+// Handle uncaught exceptions
+process.on('uncaughtException', (err) => {
+  console.error('Uncaught Exception:', err.message);
+});
+
+process.on('unhandledRejection', (err) => {
+  console.error('Unhandled Rejection:', err.message);
 });
 
 module.exports = app;
